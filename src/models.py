@@ -11,6 +11,7 @@ class Character(db.Model):
     height = db.Column(db.Integer, unique=False, nullable=False)
     weitght = db.Column(db.Integer, unique=False, nullable=False)
     birth_year = db.Column(db.String(80), unique=False, nullable=False)
+    
 
     def to_dict(self):
         return {
@@ -56,8 +57,9 @@ class Planet(db.Model):
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
     id = db.Column(db.Integer, primary_key=True)
-    model = db.Column(db.String(80), unique=False, nullable=False)
-    manufacturer = db.Column(db.Integer, unique=False, nullable=False)
+    name = db.Column(db.String(150), unique=False, nullable=False)
+    model = db.Column(db.String(150), unique=False, nullable=False)
+    manufacturer = db.Column(db.String(150), unique=False, nullable=False)
 
     def to_dict(self):
         return {
@@ -69,8 +71,8 @@ class Vehicle(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "population": self.population,
-            "terrain": self.terrain,
+            "model": self.model,
+            "manufacturer": self.manufacturer
             
         }
 
