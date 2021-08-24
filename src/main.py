@@ -9,7 +9,6 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Character, Vehicle, Planet
-#from models import Person
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -20,21 +19,27 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 
-# Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
-# generate sitemap with all your endpoints
 @app.route('/')
 def sitemap():
     return generate_sitemap(app)
+
+## USER
 
 @app.route('/user', methods=['GET'])
 def handle_user():
     users = User.query.all()
     mapped_users=[u.serialize() for u in users]
     return jsonify(mapped_users), 200
+
+@app.route('/user/<int:user_id>', methods=['GET'])
+def handle_single_user(user_id):
+    users = User.query.get(user_id)
+    users = users.serialize()
+    return jsonify(users), 200
 
 @app.route('/user', methods=['POST'])
 def post_user():
@@ -43,11 +48,19 @@ def post_user():
     db.session.commit()
     return jsonify(user1.serialize())
 
+## CHARACTER
+
 @app.route('/character', methods=['GET'])
 def handle_character():
     characters = Character.query.all()
     mapped_characters=[c.serialize() for c in characters]
     return jsonify(mapped_characters), 200
+
+@app.route('/character/<int:character_id>', methods=['GET'])
+def handle_single_character(character_id):
+    characters = Character.query.get(character_id)
+    characters = characters.serialize()
+    return jsonify(characters), 200
 
 @app.route('/character', methods=['POST'])
 def post_character():
@@ -56,11 +69,19 @@ def post_character():
     db.session.commit()
     return jsonify(character1.serialize())
 
+## PLANET
+
 @app.route('/planet', methods=['GET'])
 def handle_planet():
     planets = Planet.query.all()
     mapped_planets=[p.serialize() for p in planets]
     return jsonify(mapped_planets), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def handle_single_planet(planet_id):
+    planets = Planet.query.get(planet_id)
+    planets = planets.serialize()
+    return jsonify(planets), 200
 
 @app.route('/planet', methods=['POST'])
 def post_planet():
@@ -69,11 +90,19 @@ def post_planet():
     db.session.commit()
     return jsonify(planet1.serialize())
 
+## VEHICLE
+
 @app.route('/vehicle', methods=['GET'])
 def handle_vehicle():
     vehicles = Vehicle.query.all()
     mapped_vehicles=[v.serialize() for v in vehicles]
     return jsonify(mapped_vehicles), 200
+
+@app.route('/vehicle/<int:vehicle_id>', methods=['GET'])
+def handle_single_vehicle(vehicle_id):
+    vehicles = Vehicle.query.get(vehicle_id)
+    vehicles = vehicles.serialize()
+    return jsonify(vehicles), 200
 
 @app.route('/vehicle', methods=['POST'])
 def post_vehicle():
@@ -82,7 +111,22 @@ def post_vehicle():
     db.session.commit()
     return jsonify(vehicle1.serialize())
 
-# this only runs if `$ python src/main.py` is executed
+## FAVORITE
+
+@app.route('/favorite', methods=['GET'])
+def handle_favorite():
+    favorites = Favorite.query.all()
+    mapped_favorites=[f.serialize() for f in favorites]
+    return jsonify(mapped_favorites), 200
+
+@app.route('/favorite', methods=['POST'])
+def post_favorite():
+    favorite1 = Favorite(model="my_super_model", manufacturer="my_super_manufacturer")
+    db.session.add(favorite1)
+    db.session.commit()
+    return jsonify(favorite1.serialize())
+
+
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)

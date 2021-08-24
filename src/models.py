@@ -8,8 +8,8 @@ class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     last_name = db.Column(db.String(80), unique=False, nullable=False)
-    height = db.Column(db.Integer, unique=False, nullable=False)
-    weitght = db.Column(db.Integer, unique=False, nullable=False)
+    height = db.Column(db.String(50), unique=False, nullable=False)
+    weight = db.Column(db.String(50), unique=False, nullable=False)
     birth_year = db.Column(db.String(80), unique=False, nullable=False)
     
 
@@ -22,10 +22,10 @@ class Character(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "Last name": self.last_name,
-            "Height": self.height,
-            "Weight": self.weitght,
-            "Birth year": self.birth_year,
+            "last_name": self.last_name,
+            "height": self.height,
+            "weight": self.weight,
+            "birth_year": self.birth_year,
             
         }
 
@@ -36,7 +36,9 @@ class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=False, nullable=False)
     population = db.Column(db.Integer, unique=False, nullable=False)
-    terrain = db.Column(db.String(500), unique=False, nullable=False)
+    climate = db.Column(db.String(150), unique=False, nullable=False)
+    diameter = db.Column(db.String(150), unique=False, nullable=False)
+    orbital_period = db.Column(db.String(150), unique=False, nullable=False)
     users = db.relationship("Favorite", back_populates="user")
 
     def to_dict(self):
@@ -50,7 +52,9 @@ class Planet(db.Model):
             "id": self.id,
             "name": self.name,
             "population": self.population,
-            "terrain": self.terrain,
+            "climate": self.climate,
+            "diameter": self.diameter,
+            "orbital_period": self.orbital_period,
             
         }
 
