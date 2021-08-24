@@ -2,6 +2,32 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=False, nullable=False)
+    first_name = db.Column(db.String(80), unique= False, nullable=False)
+    last_name = db.Column(db.String(80), unique=False, nullable=False)
+    email = db.Column(db.String(100), unique=False, nullable=False)
+    favorite_planets = db.relationship("Favorite", back_populates="planet")
+    favorite_characters = db.relationship("Favorite", back_populates="character")
+    favorite_vehicles = db.relationship("Favorite", back_populates="vehicle")
+
+    def to_dict(self):
+        return {
+        '<user %s>' % self.users
+        }
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            
+        }
 
 class Character(db.Model):
     __tablename__ = 'character'
@@ -77,33 +103,6 @@ class Vehicle(db.Model):
             "name": self.name,
             "model": self.model,
             "manufacturer": self.manufacturer
-            
-        }
-
-class User(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=False, nullable=False)
-    first_name = db.Column(db.String(80), unique= False, nullable=False)
-    last_name = db.Column(db.String(80), unique=False, nullable=False)
-    email = db.Column(db.String(100), unique=False, nullable=False)
-    favorite_planets = db.relationship("Favorite", back_populates="planet")
-    favorite_characters = db.relationship("Favorite", back_populates="character")
-    favorite_vehicles = db.relationship("Favorite", back_populates="vehicle")
-
-    def to_dict(self):
-        return {
-        '<user %s>' % self.users
-        }
-
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "email": self.email,
             
         }
 
