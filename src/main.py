@@ -10,7 +10,6 @@ from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Character, Vehicle, Planet, Favorite
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-# from flask_jwt_extended import create_access_token
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -39,7 +38,7 @@ def create_token():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
     # Query your database for username and password
-    user = User.filter.query(username=username, password=password).first()
+    user = User.query.filter_by(username=username, password=password).first()
     if user is None:
         # the user was not found on the database
         return jsonify({"msg": "Bad username or password"}), 401
@@ -48,18 +47,19 @@ def create_token():
     access_token = create_access_token(identity=user.id)
     return jsonify({ "token": access_token, "user_id": user.id })
 
-@app.route("/protected", methods=["GET"])
-@jwt_required()
-def protected():
-    # Access the identity of the current user with get_jwt_identity
-    current_user_id = get_jwt_identity()
-    user = User.filter.get(current_user_id)
+# @app.route("/protected", methods=["GET"])
+# @jwt_required()
+# def protected():
+#     # Access the identity of the current user with get_jwt_identity
+#     current_user_id = get_jwt_identity()
+#     user = User.filter.get(current_user_id)
     
-    return jsonify({"id": user.id, "username": user.username }), 200
+#     return jsonify({"id": user.id, "username": user.username }), 200
 
 ## USER
 
 @app.route('/user', methods=['GET'])
+@jwt_required()
 def handle_user():
     users = User.query.all()
     mapped_users=[u.serialize() for u in users]
@@ -88,7 +88,7 @@ def handle_character():
     return jsonify(mapped_characters), 200
 
 @app.route('/character/<int:character_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def handle_single_character(character_id):
     characters = Character.query.get(character_id)
     characters = characters.serialize()
@@ -111,7 +111,7 @@ def handle_planet():
     return jsonify(mapped_planets), 200
 
 @app.route('/planet/<int:planet_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def handle_single_planet(planet_id):
     planets = Planet.query.get(planet_id)
     planets = planets.serialize()
@@ -134,7 +134,7 @@ def handle_vehicle():
     return jsonify(mapped_vehicles), 200
 
 @app.route('/vehicle/<int:vehicle_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def handle_single_vehicle(vehicle_id):
     vehicles = Vehicle.query.get(vehicle_id)
     vehicles = vehicles.serialize()
@@ -157,7 +157,7 @@ def handle_favorite():
     return jsonify(mapped_favorites), 200
 
 @app.route('/favorite/<int:favorite_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def handle_single_favorite(favorite_id):
     favorites = Favorite.query.get(favorite_id)
     favorites = favorites.serialize()
