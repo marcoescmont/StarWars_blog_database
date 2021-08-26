@@ -6,6 +6,7 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=False, nullable=False)
+    password = db.Column(db.String(80), unique=False, nullable=False)
     first_name = db.Column(db.String(80), unique= False, nullable=False)
     last_name = db.Column(db.String(80), unique=False, nullable=False)
     email = db.Column(db.String(100), unique=False, nullable=False)
@@ -125,11 +126,10 @@ class Favorite(db.Model):
 
     def serialize(self):
         return {
-            # "id": self.id,
-            # "characterId": self.character_id,
-            # "vehicleId": self.vehicle_id,
-            # "planetId": self.planet_id,
-            # "userid": self.user_id,
-            
+            "id": self.id,
+            "characterId": self.character_id,
+            "vehicleId": self.vehicle_id,
+            "planetId": self.planet_id,
+            "userid": self.user_id,
         }
         
